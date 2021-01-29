@@ -1,0 +1,17 @@
+{
+	"db": {
+		"username": "",
+		"password": "",
+		"host": "localhost",
+		"port": 27017,
+		"name": "chat",
+		"authSource": ""
+	},
+	"sessionSecret": "<RandomString>",
+	"redis": {
+		"host": "127.0.0.1",
+		"port": 6379,
+		"password": ""
+	},
+	"serverPort" : 3009
+}

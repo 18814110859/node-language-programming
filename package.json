@@ -1,0 +1,8 @@
+{
+    "name": "node-language-programming",
+    "version": "1.0.0",
+    "description": "node-language-programming",
+    "dependencies": {
+        "fs": "0.0.1-security"
+    }
+}
