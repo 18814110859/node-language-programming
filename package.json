@@ -4,5 +4,6 @@
     "description": "node-language-programming",
     "dependencies": {
         "fs": "0.0.1-security"
-    }
+    },
+    "main": "./chatrooms/servrt.js"
 }
