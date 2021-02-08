@@ -3,7 +3,10 @@
     "version": "1.0.0",
     "description": "node-language-programming",
     "dependencies": {
-        "fs": "0.0.1-security"
+        "fs": "0.0.1-security",
+        "htmlparser": "^1.7.7",
+        "nimble": "0.0.2",
+        "request": "^2.88.2"
     },
     "main": "./chatrooms/servrt.js"
 }
