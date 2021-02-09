@@ -61,10 +61,20 @@ var server = http.createServer(function (req, res) {
             break;
         // get请求
         case 'GET':
-            items.forEach(function (item, i) {
-                res.write(i + ') ' + item + '\n');
-            });
-            res.end();
+            // 优化的get处理器
+            var body = items.map(function (item, i) {
+                return i + ') ' + item;
+            }).json('\n');
+
+            // 设置请求的头
+            res.setHeader('Content-Length', body.length);
+            res.setHeader('content-type', 'text/plain; charset="utf-8"');
+            res.end(body);
+            
+            // items.forEach(function (item, i) {
+            //     res.write(i + ') ' + item + '\n');
+            // });
+            // res.end();
             break;
     }
 });

@@ -16,8 +16,8 @@ var server = http.createServer(function (req, res) {
     // 设置响应头 end
     res.statusCode(200); //设定http响应的状态码    
 
-    res.write(body);
-    res.end();
+    // res.write(body);
+    res.end(body);
 
 });
 
