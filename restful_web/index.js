@@ -16,7 +16,11 @@
 
 var http = require('http');
 var server = http.createServer(function (req, res) {
-    //当Node的HTTP解析器读入并解析请求数据时，它会将数据做成data事件的形式，把解析好的数据块放入其中，等待程序处理：
+    // 默认情况下，data事件会提供Buffer对象，这是Node版的字节数组。
+    // 而对于文本格式的待办事项而言，你并不需要二进制数据，所以最好将流编码设定为ascii或utf8；
+    // 这样data事件会给出字符串。这可以通过调用req.setEncoding(encoding)方法设定：
+
+    // 当Node的HTTP解析器读入并解析请求数据时，它会将数据做成data事件的形式，把解析好的数据块放入其中，等待程序处理：
     // 设置数据块的对象 设置成utf-8
     req.setEncoding('utf8');
 
@@ -67,7 +71,17 @@ var server = http.createServer(function (req, res) {
             }).json('\n');
 
             // 设置请求的头
-            res.setHeader('Content-Length', body.length);
+            // 设定Content-Length头
+            //为了提高响应速度，如果可能的话，应该在响应中带着Content-Length域一起发送。
+            // 对于事项清单而言，响应主体很容易在内存中提前构建好，所以你能得到字符串的长度并一次性地将整个清单发出去。
+            // 设定Content-Length域会隐含禁用Node的块编码，因为要传输的数据更少，所以能提升性能。
+
+
+            // res.setHeader('Content-Length', body.length);
+
+            // body.lengthContent-LengthContent-Length节长度，不是字符长度，并且如果字符串中有多字节字符，两者的长度是不一样的。
+            // 为了规避这个问题，Node提供了一个Buffer.byteLength()方法。
+            res.setHeader('Content-Length', Buffer.byteLength(body));
             res.setHeader('content-type', 'text/plain; charset="utf-8"');
             res.end(body);
             
@@ -76,6 +90,25 @@ var server = http.createServer(function (req, res) {
             // });
             // res.end();
             break;
+        case 'DELETE':
+            var path = url.parse(req.url).pathname;
+            var i = parseInt(path.slice(1), 10);
+
+            if (isNaN(i)) {
+                res.statusCode = 400;
+                res.end('Invalid item id');
+            } else if (!items[i]) {
+                res.statusCode = 404;
+                res.end('Item not fount');
+            } else {
+                items.splice(i, 1);
+                res.end('OK\n');
+            }
+            break;
+        case 'PUT':
+
+            break;
+
     }
 });
  
