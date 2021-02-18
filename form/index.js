@@ -14,25 +14,40 @@ var server = http.createServer(function (req, res) {
     if (req.url == '/') {
         switch (req.method) {
             case "GET":
-                
+                show(res);
                 break;
             case "POST":
-
+                add(req, res);
                 break;
             default:
-                
+                badRequest(res);                
                 break;
         }
     }
-
 });
+
+
+
 
 /**
  * 待办事项列表页面
  * @param {*} res 
  */
 function show(res) {
-    
+    var html = '<html><head><title>Todo List</title></head><body>';
+        html += '<h1></h1>';
+        html += '<ul>';
+        html += items.map(function (item) {
+            return '<li>' + item + '</li>';
+        }).join('');
+        html += '</ul>';
+        html += '<form method="post" action="/">';
+        html += '<p><input type="text" name="item" /></p>';
+        html += '<p><input type="submit" value="Add Item" /></p>';
+        html += '</form></body></html>';
+    res.setHeader('Content-Type', 'text/html');
+    res.setHeader('Content-Length', Buffer.byteLength(html));
+    res.end(html);
 }
 
 /**
@@ -40,7 +55,9 @@ function show(res) {
  * @param {*} res 
  */
 function notFound(res) {
-    
+    res.statusCode = 404;
+    res.setHeader('Content-Type', 'text/plain');
+    res.end('Not Found');
 }
 
 /**
@@ -48,11 +65,22 @@ function notFound(res) {
  * @param {*} res 
  */
 function badRequest(res) {
-    
+    res.statusCode = 400;
+    res.setHeader('Content-Type', 'text/plain');
+    res.end('Bad Request');
 }
 
+
+var qs = require('querystring');
 function add(req, res) {
-    
+    var body = '';
+    req.setEncoding('utf8');
+    req.on('data', function (chunk) {body += chunk;});
+    req.on('end', function () {
+        var obj = qs.parse(body);
+        items.push(obj.item);
+        show(res);
+    });
 }
 
 server.listen(3000);
@@ -62,16 +90,13 @@ server.listen(3000);
 // 在请求发出end事件后，所有data事件就完成了，整个请求体也会变成字符串出现在body变量中。
 
 
-// 对于包含一点JSON、XML或类似小块数据的请求主体，缓冲很好用，但缓冲这个数据可
-// 能会有问题。如果缓冲区的大小设置不正确，很可能会让程序出现可用性漏洞，这个我们在第
-// 7章再展开讨论。因此，比较好的作法是实现一个流式解析器，降低对内存的要求，防止过度
-// 消耗资源。尽管更难使用和实现，但这个处理会随着数据块的不断发出做增量式解析。
-
 // 在add()函数中解析请求主体时，用到了Node的querystring模块。来看看在REPL中的快速演
 // 示，了解下Node服务器中用到的这个querystring.parse()函数是如何解析请求主体的。
 // 假设用户通过HTML表单向待办事项列表中提交了文本“take ferrets to the vet”：
 
-
+// 在添加完事项之后，服务器调用前面实现的那个show()函数把用户又带回了原来那个表单页。
+// 这只是这个例子选择的路由，你可以选择显示一条“事项已添加到待办事项列表中”消息的页面，或者回到/页面。
+// 试一下吧。添加几个事项，你会看到待办事项出现在一个未经排序的列表中。你还可以实现前面在REST API中实现的删除功能。
 
 
 
