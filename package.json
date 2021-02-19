@@ -8,6 +8,7 @@
         "htmlparser": "^1.7.7",
         "mysql": "^2.18.1",
         "nimble": "0.0.2",
+        "pg": "^8.5.1",
         "request": "^2.88.2"
     },
     "main": "./chatrooms/servrt.js"

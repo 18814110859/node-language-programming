@@ -50,15 +50,13 @@ var server = http.createServer(function (req, res) {
 
 
 db.query(
-    ""
-    + ""
-    + ""
-    + ""
-    + ""
-    + ""
-    + ""
-    + ""
-    + ""
+    "CREATE TABLE IF NOT EXISTS `work` ("
+    + "`id` int(10) unsigned NOT NULL AUTO_INCREMENT,"
+    + "`hours` DECIMAL(5, 2) unsigned NOT NULL DEFAULT '0.00',"
+    + "`date` DATE,"
+    + "`archived` tinyint(3) NOT NULL DEFAULT '1',"
+    + "`description` LONGTEXT,"
+    + ") ENGINE = InnoDB AUTO_INCREMENT = 0 DEFAULT CHARSET = utf8mb4 COMMENT ='工作记录表'"
     , function (err) {
     if (err) throw err;
     console.log('server started...');
